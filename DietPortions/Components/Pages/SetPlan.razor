@@ -1,0 +1,87 @@
+﻿@page "/setplan"
+@rendermode InteractiveServer
+<h2>Set Diet Plan</h2>
+<hr>
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <form>
+                <div class="mb-3">
+                    <label class="form-label" for="qty">Quantity</label>
+                    <input class="form-control" id="qty" type="number" @bind="qty">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="types">Group Type</label>
+                    <select class="form-select" id="types" @bind="foodGroup">
+                        @foreach(Enum foodType in Enum.GetValues(typeof(GroupType)))
+                        {
+                            <option value="@foodType">@(foodType.ToString().Replace("_", " no. "))</option>
+                        }
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary" @onclick="AddToPlan">Add to Plan</button>
+                <button type="button" class="btn btn-danger" @onclick="ResetPlan">Reset Plan</button>
+            </form>
+        </div>
+        <div class="col-9">
+            <button class="btn btn-success float-end" @onclick="SavePlan">Save Plan</button>
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Food Group</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int i = 0;}
+                    @foreach(var portion in dietPlan)
+                    {
+                        <tr>
+                            <td>
+                                @(i + 1)
+                            </td>
+                            <td>
+                                @portion.Quantity
+                            </td>
+                            <td>
+                                @(portion.FoodType.ToString().Replace("_", " no. "))
+                            </td>
+                            <td>
+                                <button class="button btn btn-outline-danger" @onclick="() => RemoveAt(i-1)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16"><path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/></svg>
+                                </button>
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<hr>
+
+@code {
+    int qty = 1;
+    GroupType foodGroup = (GroupType)0;
+    List<GroupPortion> dietPlan = new();
+    void SavePlan()
+    {
+
+    }
+    void AddToPlan()
+    {
+        dietPlan.Add(new GroupPortion{Quantity = qty, FoodType = foodGroup});
+        qty = 1;
+    }
+    void ResetPlan()
+    {
+        dietPlan.Clear();
+    }
+    void RemoveAt(int i)
+    {
+        dietPlan.RemoveAt(i);
+    }
+}

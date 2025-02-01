@@ -2,6 +2,30 @@
 @rendermode InteractiveServer
 <h3>Todo</h3>
 
-@code {
+<input @bind="newTodo" />
+<button @onclick="AddTodo">Add todo</button>
 
+<h3>Todo (@tasks.Count(task => !task.IsDone))</h3>
+<br>
+<ul>
+    @foreach (var task in tasks)
+    {
+        <li>
+            <input type="checkbox" @bind="task.IsDone"/>
+            <input @bind="task.Title"/>
+        </li>
+    }
+</ul>
+
+@code {
+    private List<TodoItem> tasks = new();
+    string newTodo = "";
+    void AddTodo()
+    {
+        if(!string.IsNullOrEmpty(newTodo))
+        {
+            tasks.Add(new TodoItem {Title = newTodo});
+            newTodo = String.Empty;
+        }
+    }
 }
